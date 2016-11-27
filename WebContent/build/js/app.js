@@ -97,7 +97,7 @@
         .controller('cambiarAdjuntoCtrlPrtl', cambiarAdjuntoCtrlPrtl)
         .controller('messageCtrlPrtl', messageCtrlPrtl);
 
-    function panelCtrl ($uibModal, documentoFct, $filter) {
+    function panelCtrl ($uibModal, documentoFct, $filter, messageFct) {
         var panel = this;
 
         panel.tipo_busqueda = "0";
@@ -106,7 +106,7 @@
 		panel.total_documentos = 0;
 
         panel.obtener_documentos = function (opcion) {
-			documentoFct.getDocumentos(panel.pagina_actual, panel.limite, ($filter('date')(panel.desde, 'yyyy-MM-dd') || ""), ($filter('date')(panel.hasta, 'yyyy-MM-dd') || ""), (panel.numero_registro || ""), ((panel.unidad_origen ? panel.unidad_origen.unidad_id : "") || ""), ((panel.tipo_documento ? panel.tipo_documento.tipo_documento_id : "") || ""), "", opcion, 1).then(function (response) {
+			documentoFct.getDocumentos(panel.pagina_actual, panel.limite, ($filter('date')(panel.desde, 'yyyy-MM-dd') || ""), ($filter('date')(panel.hasta, 'yyyy-MM-dd') || ""), (panel.numero_registro || ""), (panel.unidad_origen ? panel.unidad_origen.unidad_id : "0"), (panel.tipo_documento ? panel.tipo_documento.tipo_documento_id : "0"), "0", opcion, 1).then(function (response) {
                 panel.documentos = response.data;
 				panel.total_documentos = response.total;
 			}).catch(function (reason) {
@@ -345,14 +345,11 @@
         };
 
         pendientes.obtener_documentos = function (destino) {
-			pendientes.cargando = true;
 			documentoFct.getDocumentos(pendientes.pagina_actual, pendientes.limite, "", "", "", "", "", destino, 4, 2).then(function (response) {
                 pendientes.documentos = response.data;
 				pendientes.total_documentos = response.total;
-				pendientes.cargando = false;
 			}).catch(function (reason) {
 				messageFct.message('Ocurrió un problema --> '+reason);
-				pendientes.cargando = false;
 			});
 		};
 
